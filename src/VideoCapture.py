@@ -1,5 +1,6 @@
 import cv2
 
+
 def label_face(img, text, pos, bg_color):
     font_face = cv2.FONT_HERSHEY_PLAIN
     scale = 2
@@ -23,7 +24,7 @@ def label_face(img, text, pos, bg_color):
 cap = cv2.VideoCapture(0)
 
 # Check if camera is working correctly
-if (cap.isOpened()== False):
+if cap.isOpened() == False:
   print("Error opening video stream or file")
 
 while(True):
