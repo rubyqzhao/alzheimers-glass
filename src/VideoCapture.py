@@ -1,46 +1,56 @@
 import cv2
 
-def label_face(img, text, pos, bg_color):
-    font_face = cv2.FONT_HERSHEY_PLAIN
-    scale = 2
-    color = (0, 0, 0)
 
-    thickness = cv2.FILLED
-    margin = 20
-
-    txt_size = cv2.getTextSize(text, font_face, scale, thickness)
-
-    end_x = pos[0] + txt_size[0][0] + margin
-    end_y = pos[1] - txt_size[0][1] - margin
-
-    cv2.rectangle(img, pos, (end_x, end_y), bg_color, thickness)
-    cv2.putText(img, text, pos, font_face, scale, color, 1, cv2.LINE_AA)
+def identify_face(frame):
+    print("Found face")
 
 
+def label_face(img, text):
+    font_face = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = 1
+    font_thickness = 2
+    label_color = (0, 255, 0)
+    line_thickness = 2
+    scale_factor = 1.2
+    min_neighbors = 5
 
+    # Use Haar cascading method to find faces
+    haar_cascade_face = cv2.CascadeClassifier('src/haarcascade_frontalface_default.xml')
 
-# Create VideoCapture object that gets input from camera
+    # Convert to gray image for faster video processing
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    faces_rects = haar_cascade_face.detectMultiScale(gray, scale_factor, min_neighbors)
+
+    # Draw box around detected face
+    for (x, y, w, h) in faces_rects:
+        cv2.rectangle(img, (x, y), (x + w, y + h), label_color, line_thickness)
+        cv2.putText(img, text, (x, y-10), font_face, font_scale, label_color, font_thickness, cv2.LINE_AA)
+
 cap = cv2.VideoCapture(0)
 
 # Check if camera is working correctly
-if (cap.isOpened()== False):
+if not cap.isOpened():
   print("Error opening video stream or file")
 
 while(True):
     ret, frame = cap.read()
 
-    # Display the resulting frame
     if ret == True:
-        # draw the label into the frame
-        label_face(frame, 'Ruby Zhao', (300, 80), (255, 255, 255))
-        #TODO: position should be adaptive
+        #while API hasn't returned
+        label_face(frame, 'Detecting face...')
+        #else
+        #label_face(frame, 'This is {0}, your {1}.'.format(name, relation))
 
-        # Display the resulting frame
-        cv2.imshow('Frame', frame)
+        cv2.imshow('Alzheimers Glasses Demo', frame)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord('i'):
+        identify_face(frame)
+    elif key == ord('q'):
         break
 
-# When everything done, release the capture
+
+# When done, release the capture
 cap.release()
 cv2.destroyAllWindows()
