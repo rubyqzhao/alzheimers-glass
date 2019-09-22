@@ -30,12 +30,13 @@ if cap.isOpened() == False:
 while(True):
     ret, frame = cap.read()
 
+
     # Display the resulting frame
     if ret == True:
         # draw the label into the frame
         label_face(frame, 'Ruby Zhao', (300, 80), (255, 255, 255))
         #TODO: position should be adaptive
-
+        print("asd")
         # Display the resulting frame
         cv2.imshow('Frame', frame)
 
