@@ -2,7 +2,8 @@ import cv2
 
 
 def identify_face(frame):
-    print("Found face")
+    # take the saved frame, send it to API
+    cv2.imwrite('media/face.jpg', frame)
 
 
 def label_face(img, text):
@@ -13,9 +14,10 @@ def label_face(img, text):
     line_thickness = 2
     scale_factor = 1.2
     min_neighbors = 5
+    path = 'src/haarcascade_frontalface_default.xml'
 
     # Use Haar cascading method to find faces
-    haar_cascade_face = cv2.CascadeClassifier('src/haarcascade_frontalface_default.xml')
+    haar_cascade_face = cv2.CascadeClassifier(path)
 
     # Convert to gray image for faster video processing
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
